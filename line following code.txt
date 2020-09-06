@@ -1,0 +1,62 @@
+unsigned char left_sensor, middle_sensor, right_sensor, cur_left, cur_middle, cur_right;
+	while (true)
+	{
+		_delay_ms(2);
+		left_sensor = ADC_Conversion(1);
+		middle_sensor = ADC_Conversion(2);
+		right_sensor = ADC_Conversion(3);
+		if (middle_sensor == 255 && left_sensor == 0 && right_sensor == 0)
+		{
+			forward();
+			velocity(150, 150);
+		}
+		else if (left_sensor == 255 && middle_sensor == 255 && right_sensor == 0)
+		{
+			left();
+			velocity(20, 20);
+
+		}
+		else if (left_sensor == 0 && middle_sensor == 255 && right_sensor == 255)
+		{
+			right();
+			velocity(20, 20);
+		}
+		else if (left_sensor == 255 && middle_sensor == 0 && right_sensor == 0)
+		{
+			soft_left();
+			velocity(40, 40);
+		}
+		else if (left_sensor == 0 && middle_sensor == 0 && right_sensor == 255)
+		{
+			soft_right();
+			velocity(40, 40);
+		}
+		else if (left_sensor == 0 && middle_sensor == 0 && right_sensor == 0)
+		{
+			back();
+			velocity(50, 50);
+		}
+		else if (left_sensor == 255 && middle_sensor == 0 && right_sensor == 255)
+		{
+			forward();
+			velocity(50, 50);
+		}
+		else if (left_sensor == 255 && middle_sensor == 255 && right_sensor == 255)
+		{
+			forward();
+			_delay_ms(65);
+			cur_left = ADC_Conversion(1);
+			cur_middle = ADC_Conversion(2);
+			cur_right = ADC_Conversion(3);
+			// the above piece of code helps the bot to differentiate between a node and a line by making is move forward for 50ms then again reading the reading and comparing the values 
+			if (cur_left == left_sensor && middle_sensor == cur_middle && right_sensor == cur_right)
+			{
+				forward();
+				_delay_ms(270);
+				printf("Detected a node");
+				
+				return ;
+			}
+		}
+	}
+}
